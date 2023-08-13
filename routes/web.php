@@ -17,25 +17,20 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-});
-
-
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::resource('listings', ListingController::class);
+Route::post('listings', [ListingController::class , 'store'])->name("listings.store");
+Route::get('/', [ListingController::class , 'index'])->name("listings.index");
+Route::get('/listings/{listing}', [ListingController::class , 'show'])->name("listings.show");
 
 
 Route::middleware('auth')->group(function () {
 
-    // Route::post('/listings', [ListingController::class , 'store'])->name("listings.store");
-    // Route::get('listings', [ListingController::class , 'index'])->name("listings.index");
-
+    
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

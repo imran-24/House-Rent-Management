@@ -13,9 +13,9 @@ const ListingImages = ({images}) => {
     stopOnHover={true}
     showStatus={false}>
       {
-        images.map((image, index) =>(
-          <div key={index}>
-              <img src={image} className='w-full rounded-lg' />
+        images?.map((image, index) =>(
+          <div key={index} className='h-[135px] '>
+              <img src={`storage/${image}`} className='w-[100px] rounded-lg' />
           </div>
         ))
       }

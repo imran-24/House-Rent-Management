@@ -97,22 +97,33 @@ const RentModal = () => {
     if(step != STEPS.PRICE) return onNext()
     setIsLoading(true)
     // console.log(data)
-    router.post('/listings', data ,{
-      onFinish: (response) => {
-        // Handle successful response
-        setIsLoading(false)
+    router.post('listings', data ,{
+      // onFinish: (response) => {
+      //   // Handle successful response
+      //   setIsLoading(false)
+      //   toast.success("Created!")
+      //   // router.refresh() 
+      //   reset()
+      //   setStep(STEPS.CATEGORY)
+      //   rentModal.onClose()        // Perform any necessary actions
+      // },
+      // onError: (error) => {
+      //   // Handle error
+      //   console.error(error);
+      //   toast.error('Something went wrong')
+      //   // Perform any necessary error handling
+      // }
+      onError: errors => {
+        console.error(errors);
+        toast.error('Something went wrong')
+    },
+    onSuccess: () => {
         toast.success("Created!")
         // router.refresh() 
         reset()
         setStep(STEPS.CATEGORY)
-        rentModal.onClose()        // Perform any necessary actions
-      },
-      onError: (error) => {
-        // Handle error
-        console.error(error);
-        toast.error('Something went wrong')
-        // Perform any necessary error handling
-      }
+        rentModal.onClose()        
+    }
   });
     
 
@@ -152,6 +163,7 @@ const RentModal = () => {
         />
         <SelectMap 
         value={location}
+        showSearch
         onChange={(value)=> setCustomValue('location', value)}/>
         
         {/* <CountrySelect 

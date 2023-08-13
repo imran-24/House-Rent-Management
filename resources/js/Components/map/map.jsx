@@ -7,60 +7,99 @@ import ReactMapGL, {
 } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Geocoder from './geocoder';
+import selectedListing from '@/hooks/selectdListing';
 
-const SelectMap = ({value, onChange}) => {
+const SelectMap = ({value, onChange, listings, showSearch}) => {
 
   const mapRef = useRef();
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+
+  const {selected} = selectedListing();
+
+  const [viewport, setViewport] = useState({
+
+    latitude: '',   // Replace with your initial latitude
+    longitude: '', // Replace with your initial longitude
+  });
+
+  useEffect(()=>{
+    const listing = listings?.find( listing => listing.id == selected )
+    if(listing){
+      setViewport({
+        ...viewport,
+        latitude: listing.location.lat,
+        longitude: listing.location.lng,
+      });
+    }
+  },[selected])
 
   useEffect(() => {
-    if(value){
-      setLatitude(value.lat);
-      setLongitude(value.lng);
-    }
-    else{
+    
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
+          setViewport({
+            ...viewport,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
         }, function(error) {
           console.error("Error getting location: " + error.message);
         });
       } else {
         console.error("Geolocation is not available in this browser.");
       }
-    }
+    
+    
   }, []);
 
+  // useEffect(()=>{
+  //   if(value){
+  //     setLatitude(value.lat);
+  //     setLongitude(value.lng);
+  //   }
+  //   setViewport({
+  //     ...viewport,
+  //     latitude: latitude,
+  //     longitude: longitude,
+  //   });
+  // },[value])
+  
   useEffect(()=>{
     if(onChange){
-    onChange({"lng": longitude, "lat": latitude})}
-  },[latitude, longitude])
+    onChange({"lng": viewport.longitude, "lat": viewport.latitude})}
+  },[viewport])
 
   return (
     <div className='h-full w-full'>
     {
-      (longitude !== null && latitude !== null) ?
+      (viewport.longitude !== null && viewport.latitude !== null) ?
       <ReactMapGL
         ref={mapRef}
         mapboxAccessToken="pk.eyJ1IjoiaW1yYW4xOTU2IiwiYSI6ImNsa3h0ajViOTAwaWEzbW5wdmY4M2M0OWIifQ.I423Zm6aT0dFSw-ocswIdQ"
-        initialViewState={{
-          longitude: longitude,
-          latitude: latitude,
-          zoom: 15,
-        }}
+        {...viewport}
+        doubleClickZoom
+        maxZoom={18}
+        minZoom={14}
+    
+        initialViewState={{}}
         style={{ borderRadius: 6, padding: 6}}
-        
+        onViewportChange={(e) => 
+          setViewport({
+            ...viewport,
+            latitude: e.lngLat.lat,
+            longitude: e.lngLat.lng
+          }) }
         mapStyle="mapbox://styles/mapbox/streets-v11"
       >
         <Marker
-          latitude={latitude}
-          longitude={longitude}
+           latitude={viewport.latitude}
+          longitude={viewport.longitude}
           draggable
-          onDragEnd={(e) => {
-            setLongitude(e.lngLat.lng) 
-            setLatitude(e.lngLat.lat)}
+          onDragEnd={(e) => 
+            setViewport({
+              ...viewport,
+              latitude: e.lngLat.lat,
+              longitude: e.lngLat.lng
+            }) 
           }
         />
         <NavigationControl position="bottom-right" />
@@ -74,7 +113,7 @@ const SelectMap = ({value, onChange}) => {
           //   })
           // }
         />
-        <Geocoder setLongitude={setLongitude} setLatitude={setLatitude} />
+        {showSearch && <Geocoder setViewport={setViewport} viewport={viewport} />}
       </ReactMapGL>
       : <div>Loading map</div>
     }

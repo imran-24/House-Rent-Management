@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
 
 class ListingController extends Controller
@@ -15,8 +18,23 @@ class ListingController extends Controller
      */
     public function index()
     {
-        // $listings = Listing::all();
-        // dd($listings);
+        $listings = Listing::orderBy("created_at", "desc")->get();
+        
+        // if($listings->count() > 0){
+        //     return response()->json([
+        //         'status' => 200,
+        //         'listings'=> $listings
+        //     ], 200);
+        // }
+        // else{
+        //     return response()->json([
+        //         'status' => 404,
+        //         'message'=> "No records found"
+        //     ], 404);
+        // }
+        return Inertia::render('Home',[
+            'listings' => $listings,
+        ]);
     }
 
     /**
@@ -49,22 +67,17 @@ class ListingController extends Controller
             'description' => 'required',
             'price' => 'required'
         ]);
-
-    
         
-        $imagePaths = [];
-        foreach(request('imageSrc') as $file){
-            
+          $imagePaths = [];
+          foreach(request('imageSrc') as $file)
+          {
             $imagePath = $file->store('uploads', 'public');
             $image = Image::make(public_path("storage/{$imagePath}"))->fit(1200, 1200); 
             $image->save();
             array_push($imagePaths, $imagePath);
-
-        }
+          }
         
-        
-
-        Listing::create([
+          Listing::create([
             'category' => $validated['category'],
             'location' => $validated['location'],
             'imageSrc' => $imagePaths,
@@ -75,6 +88,7 @@ class ListingController extends Controller
             'description' => $validated['description'],
             'price' => $validated['price']
         ]);
+    
 
     }
 
@@ -86,7 +100,7 @@ class ListingController extends Controller
      */
     public function show(Listing $listing)
     {
-        //
+        $listing = Listing::find($listing->id);
     }
 
     /**
@@ -120,6 +134,7 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing)
     {
-        //
+        $listing = Listing::find($listing->id);
+        $listing->delete();
     }
 }

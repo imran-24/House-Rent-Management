@@ -8,7 +8,6 @@ import { usePage } from '@inertiajs/react'
 
 const Navbar = () => {
   const  currentUser = usePage().props.auth.user;
-  console.log(currentUser)
   return (
     <div className='w-full fixed bg-white shadow-sm z-50 '>
     <div className='py-3 border-b-[1px]'>

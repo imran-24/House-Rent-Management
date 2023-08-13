@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ListingInfo = ({title, subtitle, guests, bedroom, bed, bathroom}) => {
+const ListingInfo = ({title, subtitle, guests, bed, bathroom}) => {
   return (
     <div className='flex flex-col  space-y-1'>
         <div className='text-xs text-neutral-500'>
@@ -14,13 +14,10 @@ const ListingInfo = ({title, subtitle, guests, bedroom, bed, bathroom}) => {
                 {guests} guests
             </div>
             <div>
-                {bedroom} bedroom
+                {bed} bedroom
             </div>
             <div>
-                {bed} beds
-            </div>
-            <div>
-                {bathroom} bath
+                {bathroom} bathroom
             </div>
         </div>
     </div>
