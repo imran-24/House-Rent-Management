@@ -4,13 +4,16 @@ import ListingInfo from './listing-info'
 import ListingFooter from './listing-footer'
 import HeartButton from '../heart-button'
 import selectedListing from '@/hooks/selectdListing'
+import { Link } from '@inertiajs/react'
+import Button from '../button/button'
 
 const Listing = ({listing}) => {
   const {selected, onSelect} = selectedListing();
-  
+
   return (
-    <div>
+    
         <div 
+        // onClick={router.visit(`/listings/${listing.id}`)}
         onClick={()=> onSelect(listing.id)}
         className={`
         flex 
@@ -30,7 +33,7 @@ const Listing = ({listing}) => {
             <div className=''>
             <ListingImages images={listing.imageSrc} />
             </div>
-            <div className='flex flex-1 flex-col justify-between relative'>
+            <div className='flex flex-1 flex-col justify-between  relative'>
             <ListingInfo 
                 title={listing.title}
                 subtitle={listing.description}
@@ -38,13 +41,24 @@ const Listing = ({listing}) => {
                 guests={listing.guestCount}
                 bathroom={listing.bathroomCount}
             />
-            <ListingFooter rating={listing.rating} price={listing.price} />
+            <Link  href={ route('user.listings.show', listing.id)}  >
+              <div className='w-[100px]'>
+                <Button 
+                label={'Details'}
+                outline
+                small
+                />
+                
+              </div>
+            </Link>
+            {/* <ListingFooter rating={listing.rating} price={listing.price} /> */}
             <div className='absolute right-0'>
             <HeartButton />
             </div>
+            
             </div>
         </div>
-    </div>
+   
   )
 }
 

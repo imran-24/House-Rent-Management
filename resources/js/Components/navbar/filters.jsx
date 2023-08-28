@@ -17,9 +17,9 @@ const Filters = () => {
         '>
             {filters.map(category => (
                 <FilterBox 
-                    key={category.label}
-                    icon={category.icon}
-                    label={category.label}
+                  key={category.label}
+                  icon={category.icon}
+                  label={category.label}
                     // selected={category.label == categoryParam}
                 />
             ))}

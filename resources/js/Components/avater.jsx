@@ -4,7 +4,7 @@ const Avater = ({imageSrc}) => {
   return (
     <img
         alt='dp'
-        src='images/user-placeholder.png'
+        src='/images/user-placeholder.png'
         className='object-contain rounded-full h-8 w-8'
     />
   )

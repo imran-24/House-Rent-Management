@@ -1,0 +1,15 @@
+input[type="radio"] {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer; /* Hide the default radio button */
+}
+
+
+/* Style for the custom radio buttons when selected */
+input[type="radio"]:checked {
+  border-color: #34f6c5; /* Change the border color when selected */
+  background-color: #34f6c5; /* Change the background color when selected */
+  color: white; /* Change the label text color when selected */
+}

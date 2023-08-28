@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');            $table->string('category');
             $table->string('location')->nullable();
             $table->string('imageSrc')->nullable();
             $table->integer('guestCount');

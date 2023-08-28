@@ -1,0 +1,84 @@
+DatePickerStyles.css
+
+/* Style for the container div */
+.date-picker-container {
+    width: 100%;
+  }
+  
+  /* Style for the date picker input */
+  .react-datepicker__input-container input {
+    width: 100%;
+    padding: 11.5px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  /* Style for the calendar pop-up */
+  .react-datepicker {
+    font-family: Arial, sans-serif;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    width: 100%;
+    display: flex;
+    
+  }
+  
+  /* Style for the calendar header */
+  .react-datepicker__header {
+    background-color: #f5f5f5;
+    padding: 15px;
+    margin: 10px;
+    border: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  /* Style for the month and year dropdowns */
+  .react-datepicker__month-dropdown-container,
+  .react-datepicker__year-dropdown-container {
+    margin-top: 10px;
+  }
+  
+  /* Style for the month and year dropdowns */
+  .react-datepicker__month-dropdown,
+  .react-datepicker__year-dropdown {
+    width: 100%;
+    border-radius: 10px;
+    color: white;
+    border: 2px;
+    outline: none;
+
+  }
+  
+  /* Style for the selected date */
+  .react-datepicker__day--selected {
+    background-color: #0cb29e;
+    color: white;
+    border-radius: 50%;
+  }
+  
+  .react-datepicker__year--selected {
+    background-color: #0cb29e;
+    color: white;
+    border-radius: 50%;
+  }
+  /* Style for the today's date */
+  .react-datepicker__day--today {
+    font-weight: bold;
+  }
+  
+  /* Style for the day names in the header */
+  .react-datepicker__day-name {
+    font-weight: bold;
+  }
+  
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  
+  .react-datepicker-popper {
+    z-index: 9999; /* Ensure the date picker is on top */
+  }

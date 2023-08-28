@@ -22,6 +22,7 @@ const Button = ({
         ${small ? 'w-auto' : 'w-full'}
         ${small ? 'px-8' : 'px-16'}
         py-2
+        
         ${outline ? 'border-2' : ''}
         ${outline ? 'text-black border-black font-extrabold' : 'text-white'}
         ${outline ? 'bg-transparent' : 'bg-teal-600'}
@@ -31,7 +32,7 @@ const Button = ({
         {label}
         {
             Icon &&
-            <div className='absolute left-10 '>
+            <div className=''>
                 <Icon size={20} />
             </div>
         }

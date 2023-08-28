@@ -4,7 +4,7 @@ const CategoryInput = ({
     onClick,
     selected,
     label,
-    icon: Icon
+
 }) => {
   return (
     <div 
@@ -26,7 +26,7 @@ const CategoryInput = ({
     ${selected ? 'text-teal-600' : 'text-neutral-500'}
     
     `}>
-        <Icon size={18} />
+        {/* <Icon size={18} /> */}
         <div className={`text-[10px] 
             ${selected ? 'font-bold' : 'font-medium'}
             `}>

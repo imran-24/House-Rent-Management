@@ -69,7 +69,7 @@ const SelectMap = ({value, onChange, listings, showSearch}) => {
   },[viewport])
 
   return (
-    <div className='h-full w-full'>
+    <div className='h-full  w-full'>
     {
       (viewport.longitude !== null && viewport.latitude !== null) ?
       <ReactMapGL
@@ -81,7 +81,7 @@ const SelectMap = ({value, onChange, listings, showSearch}) => {
         minZoom={14}
     
         initialViewState={{}}
-        style={{ borderRadius: 6, padding: 6}}
+        style={{ borderRadius: 6, padding: 6, minHeight: 300}}
         onViewportChange={(e) => 
           setViewport({
             ...viewport,

@@ -6,7 +6,6 @@ import LoginModal from "@/Components/modal/login-modal";
 import RegisterModal from "@/Components/modal/register-modal";
 import RentModal from "@/Components/modal/rent-modal";
 import Filters from "@/Components/navbar/filters";
-import Navbar from "@/Components/navbar/navbar";
 import MainLayout from "@/Layouts/MainLayout";
 import { getListings } from "@/api/getListings";
 import ToastProvider from "@/provider/toast-provider";
@@ -16,9 +15,9 @@ import { useState } from "react";
 
 export default function Home(props) {
  
-    const {listings} = props;
+    const {listings, categories} = props;
     const isEmpty = listings?.length == 0
-
+    console.log(props);
     const [select, setSelect] = useState(null);
 
     return (
@@ -29,31 +28,32 @@ export default function Home(props) {
         overflow-x-hidden'>
             <Head title="RealState" />
             
-            <Navbar />
+            
             <RentModal />
             <LoginModal />
             <RegisterModal />
             <ToastProvider />
             <MainLayout>
-                <div>
+                <div className="pt-20">
                 <Filters />
-                {
-                isEmpty 
-                ?(<Container>
-                    <EmptyState showReset/>
-                </Container>)
-                :(<div className='grid h-full  lg:grid-cols-2 grid-cols-1  gap-10 lg:gap-0'>
-                    <div className="h-[82vh] overflow-y-auto ">
-                        <Listings
-                        listings={listings} 
-                        select={select}
-                        setSelect={setSelect}
-                        />
-                    </div>
-                    <div className="lg:flex hidden">
-                        <SelectMap listings={listings} value={select}/>
-                    </div>
-                </div>)}
+                    {
+                        isEmpty 
+                        ?(<Container>
+                            <EmptyState showReset/>
+                        </Container>)
+                        :(<div className='grid h-full  lg:grid-cols-2 grid-cols-1  gap-10 lg:gap-0'>
+                            <div className="h-[82vh] overflow-y-auto ">
+                                <Listings
+                                listings={listings} 
+                                select={select}
+                                setSelect={setSelect}
+                                />
+                            </div>
+                            <div className="lg:flex hidden">
+                                <SelectMap listings={listings} value={select}/>
+                            </div>
+                        </div>)
+                    }
                 </div>
             </MainLayout>
         </div>

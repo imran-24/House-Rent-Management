@@ -10,6 +10,7 @@ class Listing extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'category',
         'location' ,
         'guestCount',
@@ -25,4 +26,9 @@ class Listing extends Model
         'location' => 'object',
         'imageSrc' => 'array'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

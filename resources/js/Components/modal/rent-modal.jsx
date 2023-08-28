@@ -1,5 +1,4 @@
 import useRentModal from "@/hooks/useRentModal";
-import { categories } from "@/utils/constant";
 import { useMemo, useState } from "react";
 import Heading from "../heading";
 import CategoryInput from "../inputs/category-input";
@@ -10,9 +9,9 @@ import axios from "axios";
 import Modal from "./modal";
 import ImageUpload from "../image-upload";
 import SelectMap from "../map/map";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { toast } from "react-hot-toast";
-
+// user 
 
  const STEPS = {
     CATEGORY : 0,
@@ -29,6 +28,9 @@ const RentModal = () => {
   const rentModal = useRentModal()
   const [step, setStep] = useState(STEPS.CATEGORY)
 
+  const {auth: {user}}  = usePage().props;
+  const {admin, categories}  = usePage().props;
+  console.log(categories);
 
   const {
     register, 
@@ -96,23 +98,13 @@ const RentModal = () => {
     
     if(step != STEPS.PRICE) return onNext()
     setIsLoading(true)
-    // console.log(data)
-    router.post('listings', data ,{
-      // onFinish: (response) => {
-      //   // Handle successful response
-      //   setIsLoading(false)
-      //   toast.success("Created!")
-      //   // router.refresh() 
-      //   reset()
-      //   setStep(STEPS.CATEGORY)
-      //   rentModal.onClose()        // Perform any necessary actions
-      // },
-      // onError: (error) => {
-      //   // Handle error
-      //   console.error(error);
-      //   toast.error('Something went wrong')
-      //   // Perform any necessary error handling
-      // }
+
+    const formatedData = {
+      ...data,
+      'user_id': user?.id || null,
+    }
+ 
+    router.post('listings', formatedData ,{
       onError: errors => {
         console.error(errors);
         toast.error('Something went wrong')
@@ -139,13 +131,13 @@ const RentModal = () => {
       />
       <div className='flex flex-wrap gap-3 py-3'>
         {
-          categories.map(item => (
+          categories?.map(item => (
             <CategoryInput 
-            key={item.label}
+            key={item.name}
             onClick={(value)=> setCustomValue('category', value)}
-            selected={category == item.label}
-            label={item.label}
-            icon={item.icon}/>
+            selected={category == item.name}
+            label={item.name}
+            />
           ))
         }
         
@@ -273,6 +265,7 @@ const RentModal = () => {
         type='text'
         errors={errors}
         id='title'
+        
         register={register} />
         <Input
         label={'Description'}

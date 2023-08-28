@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'favorite_ids'
     ];
 
     /**
@@ -40,5 +41,21 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'favorite_ids' => 'array'
     ];
+
+    public function getRedirectRoute()
+    {
+        return match((int)$this->is_admin) {
+            0 => 'user.home',
+            1 => 'admin',
+        };
+    }
+
+    public function listings()
+    {
+        return $this->hasMany(Listing::class);
+    }
+
+    
 }

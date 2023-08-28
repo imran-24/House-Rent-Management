@@ -5,7 +5,7 @@ import MenuItem from './MenuItem';
 import useRentModal from '@/hooks/useRentModal';
 import useLoginModal from '@/hooks/useLoginModal';
 import useRegisterModal from '@/hooks/useRegisterModal';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 
 
 const UserMenu = ({currentUser}) => {
@@ -28,7 +28,7 @@ const UserMenu = ({currentUser}) => {
                     font-bold 
                     text-sm 
                     hidden 
-                    md:flex 
+                    lg:flex 
                     hover:bg-neutral-100 
                     cursor-pointer 
                     transition 
@@ -57,25 +57,31 @@ const UserMenu = ({currentUser}) => {
             </div>
         </div>
         {isOpen && 
-        <div className='absolute top-12 right-0 shadow-lg w-[200px] transition duration-150 ease-out rounded-xl  bg-white'>
+        <div className=' absolute top-12 right-0 shadow-lg w-[200px] transition duration-150 ease-out rounded-xl  bg-white'>
             {!currentUser ? 
                 <>
-                <MenuItem onclick={()=> loginModal.onOpen()}  title='Log in'/>
-                <MenuItem onclick={()=> registerModal.onOpen()} title='Sign up'/>
+                
+                <MenuItem 
+                onclick={() => router.visit('/login')}  
+                title='Log in'/>
+                
+                <MenuItem 
+                onclick={() => router.visit('/register')} 
+                title='Sign up'/>
                 </>
                 : 
                 <>
                 
-                <MenuItem onclick={()=> {}} title='My favourites'/>
+                <MenuItem onclick={()=> router.visit('/rental-infos/create')} title='Rental Infos'/>
                 <MenuItem onclick={()=> {}}  title='My properties'/>
                 
                 <MenuItem onclick={rentModal.onOpen}  title='Add new property'/>
                 <hr />
-                <Link href="/logout" as="button" method="post">
+                <Link className='w-full z-50' href="/logout" as="button" method="post">
                     <MenuItem onclick={()=>{}} title='Sign out'/>
                 </Link>
-                </>
 
+                </>
             }
         </div>}
     </div>

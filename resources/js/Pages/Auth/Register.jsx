@@ -1,121 +1,167 @@
-import { useEffect } from 'react';
+import Button from "@/Components/button/button";
+import Heading from "@/Components/heading";
+import Input from "@/Components/inputs/input";
+import { Head, router } from "@inertiajs/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import axios from "axios";
+import { toast } from "react-hot-toast";
+
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register, 
+    handleSubmit,
+    formState:{
+        errors
+    }
+  } = useForm({
+    defaultValues:{
         name: '',
         email: '',
         password: '',
-        password_confirmation: '',
-    });
+        password_confirmation: ""
+    }
+  })
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
+  const onSubmit = (data, e)=>{
+  
+    setIsLoading(true)
+    // e.preventDefault();
+    console.log(data)
+    // post(route('register'))
+    
+    axios.post('register', data)
+    .then(() => {
+      toast.success("Account created")
+      router.visit('/')
+    })
+    .catch((error) => {
+      setIsLoading(false)
+      toast.error("Something went wrong")
+    })
+    .finally(()=> setIsLoading(false))
 
-    const handleOnChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
-    };
-
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route('register'));
-    };
-
+  }
     return (
         <GuestLayout>
             <Head title="Register" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={handleOnChange}
-                        required
-                    />
-
-                    <InputError message={errors.name} className="mt-2" />
+            <div className='
+            relative
+            sm:h-auto
+            h-full
+            w-full
+            md:h-auto
+            '>
+            <div className='
+            h-full
+            translate
+            duration-300'>
+                <div className='
+                translate 
+                h-full 
+                border-0 
+                w-full
+                relative  
+                rounded-lg 
+                px-4
+                flex 
+                flex-col 
+                '>
+                    {/* Header */}
+                    <div className='
+                    flex items-center justify-between py-4  border-b-[1px]
+                    '>
+                       <p className='text-lg font-semibold text-center flex-1'>Register</p> 
+                    </div>
+                    {/* body */}
+                    <div className='my-4 h-full'>
+                    <div className='flex flex-col gap-3'>
+                        <Heading 
+                        title='Welcome to Airbnb'
+                        subtitle='Create an account!'
+                        />
+                        <div className='flex flex-col gap-3 py-3'>
+                            <Input 
+                            type='text'
+                            id='name'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Name'
+                            />
+                            <Input 
+                            type='email'
+                            id='email'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Email'
+                            />
+                            <Input 
+                            type='password'
+                            id='password'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Password'
+                            />
+                            <Input 
+                            type='password'
+                            id='password_confirmation'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Confirm Password'
+                            />
+                        </div>
+                    </div>
+                    </div>
+                    {/* footer */}
+                    <div className=' flex flex-col gap-2 items-center my-4 '>
+                        <div className='w-full flex items-center gap-2 '>
+                        <Button  
+                        label={'Continue'}
+                        disabled={isLoading}
+                        onClick={handleSubmit(onSubmit)}
+                        />
+                        </div>
+                        <div className='w-full flex flex-col gap-3 '>
+                            {/* <Button
+                            outline
+                            label='Continue with Google'
+                            icon={FcGoogle}
+                            disabled={isLoading}
+                            onClick={()=>{}}
+                            /> */}
+                            {/* <Button
+                            outline
+                            label='Continue with Github'
+                            icon={AiFillGithub}
+                            disabled={isLoading}
+                            onClick={()=>{}}
+                            /> */}
+                            <div className='flex items-center justify-center py-4'>
+                                <p className='text-sm text-neutral-500'>Already have an account?
+                                <span 
+                                onClick={()=> router.visit('/login')}
+                                className='font-bold pl-1 hover:underline transition cursor-pointer'>Log in</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={handleOnChange}
-                        required
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={handleOnChange}
-                        required
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password_confirmation" value="Confirm Password" />
-
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={handleOnChange}
-                        required
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Link
-                        href={route('login')}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-            </form>
+            </div>            
+            
+            </div>
         </GuestLayout>
     );
 }

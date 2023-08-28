@@ -9,7 +9,7 @@ import { usePage } from '@inertiajs/react'
 const Navbar = () => {
   const  currentUser = usePage().props.auth.user;
   return (
-    <div className='w-full fixed bg-white shadow-sm z-50 '>
+    <div className='w-full fixed bg-white shadow-sm  z-50'>
     <div className='py-3 border-b-[1px]'>
         <Container>
             <div className='flex-1  flex items-center justify-between gap-3'>

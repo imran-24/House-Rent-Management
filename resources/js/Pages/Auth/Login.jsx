@@ -1,97 +1,150 @@
-import { useEffect } from 'react';
-import Checkbox from '@/Components/Checkbox';
+import Button from "@/Components/button/button";
+import Heading from "@/Components/heading";
+import Input from "@/Components/inputs/input";
+import { Head, router } from "@inertiajs/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+
+export default function Login() {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register, 
+    handleSubmit,
+    formState:{
+        errors
+    }
+  } = useForm({
+    defaultValues:{
+        name: '',
         email: '',
         password: '',
-        remember: '',
-    });
+        password_confirmation: ""
+    }
+  })
 
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
+  const onSubmit = (data, e)=>{
+  
+    setIsLoading(true)
+    e.preventDefault();
 
-    const handleOnChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
-    };
+    axios.post('login', data)
+    .then(() => {
+      router.visit('/')
+      toast.success("Logged in")
+    })
+    .catch(({response}) => {
+      toast.error(response?.data?.message)
+      // router.reload()
+      // console.log(response?.data?.message)
+        
+    }).finally(()=> setIsLoading(false))
 
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route('login'));
-    };
-
+  }
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title="Register" />
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={handleOnChange}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
+            <div className='
+            relative
+            sm:h-auto
+            h-full
+            w-full
+            md:h-auto
+            '>
+            <div className='
+            h-full
+            translate
+            duration-300'>
+                <div className='
+                translate 
+                h-full 
+                border-0 
+                w-full
+                relative  
+                rounded-lg 
+                px-4
+                flex 
+                flex-col 
+                '>
+                    {/* Header */}
+                    <div className='
+                    flex items-center justify-between py-4  border-b-[1px]
+                    '>
+                       <p className='text-lg font-semibold text-center flex-1'>Login</p> 
+                    </div>
+                    {/* body */}
+                    <div className='my-4 h-full'>
+                    <div className='flex flex-col gap-3'>
+                        <Heading 
+                        title='Welcome back'
+                        subtitle='Login to your account!'
+                        />
+                        <div className='flex flex-col gap-3 py-3'>
+                            
+                            <Input 
+                            type='email'
+                            id='email'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Email'
+                            />
+                            <Input 
+                            type='password'
+                            id='password'
+                            register={register}
+                            disabled={isLoading}
+                            errors={errors}
+                            required
+                            label='Password'
+                            />
+                            
+                        </div>
+                    </div>
+                    </div>
+                    {/* footer */}
+                    <div className=' flex flex-col gap-2 items-center my-4 '>
+                        <div className='w-full flex items-center gap-2 '>
+                        <Button  
+                        label={'Continue'}
+                        disabled={isLoading}
+                        onClick={handleSubmit(onSubmit)}
+                        />
+                        </div>
+                        <div className='w-full flex flex-col gap-3 '>
+                            {/* <Button
+                            outline
+                            label='Continue with Google'
+                            icon={FcGoogle}
+                            disabled={isLoading}
+                            onClick={()=>{}}
+                            /> */}
+                            {/* <Button
+                            outline
+                            label='Continue with Github'
+                            icon={AiFillGithub}
+                            disabled={isLoading}
+                            onClick={()=>{}}
+                            /> */}
+                            <div className='flex items-center justify-center py-4'>
+                                <p className='text-sm text-neutral-500'>First time using Arbnb?
+                                <span 
+                                onClick={()=> router.visit('/register')}
+                                className='font-bold pl-1 hover:underline transition cursor-pointer'>Sign up</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={handleOnChange}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} onChange={handleOnChange} />
-                        <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
+            </div>            
+            
+            </div>
         </GuestLayout>
     );
 }
